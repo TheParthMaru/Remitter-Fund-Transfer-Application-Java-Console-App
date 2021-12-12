@@ -1,0 +1,85 @@
+username = remitter
+password = remitter
+
+# CREATING ADMIN TABLE
+
+CREATE TABLE admin(
+admin_id VARCHAR2(10) DEFAULT 'admin',
+password VARCHAR2(20) DEFAULT 'admin',
+role VARCHAR2(10) DEFAULT 'admin',
+CONSTRAINT admin_pk PRIMARY KEY(admin_id)
+);
+
+
+# CREATING ACCOUNT_DETAILS TABLE
+
+CREATE TABLE account_details(
+account_number NUMBER NOT NULL,
+CONSTRAINT acc_no_pk PRIMARY KEY(account_number)
+);
+
+
+# CREATING REMITTER TABLE
+
+CREATE TABLE remitter(
+rid NUMBER,
+name VARCHAR2(30) NOT NULL,
+password VARCHAR2(20) NOT NULL,
+account_number NUMBER NOT NULL UNIQUE,
+account_balance NUMBER NOT NULL,
+account_type VARCHAR2(15) NOT NULL,
+CONSTRAINT rid_pk PRIMARY KEY(rid),
+CONSTRAINT acc_no_fk FOREIGN KEY(account_number) REFERENCES account_details(account_number)
+);
+
+
+# CREATING SEQUENCE FOR rid IN REMITTER TABLE
+
+CREATE SEQUENCE seq_1
+START WITH 101
+INCREMENT BY 1
+MINVALUE 101
+MAXVALUE 999
+NOCYCLE
+NOCACHE
+ORDER;
+
+# CREATING REMITTER_PERSONAL TABLE
+
+CREATE TABLE remitter_personal(
+rid NUMBER,
+email VARCHAR2(30) NOT NULL UNIQUE,
+mobile NUMBER NOT NULL UNIQUE,
+address VARCHAR2(50) NOT NULL,
+CONSTRAINT rid_fk FOREIGN KEY(rid) REFERENCES remitter(rid)
+);
+
+
+# CREATING BENIFICIARY TABLE
+
+CREATE TABLE beneficiary(
+account_number NUMBER NOT NULL,
+name VARCHAR2(30) NOT NULL,
+account_type VARCHAR2(15) NOT NULL,
+account_status VARCHAR2(15) NOT NULL,
+ifsc_code VARCHAR2(11) NOT NULL,
+email VARCHAR2(30) NOT NULL,
+max_limit NUMBER,
+rid NUMBER NOT NULL,
+account_balance NUMBER NOT NULL DEFAULT 0,
+CONSTRAINT b_acc_pk PRIMARY KEY(account_number),
+CONSTRAINT rmid_fk FOREIGN KEY(rid) REFERENCES remitter(rid)
+);
+
+
+# CREATING TRANSACTIONS TABLE
+
+CREATE TABLE transaction(
+rid NUMBER NOT NULL,
+transferred_amount NUMBER NOT NULL,
+narration VARCHAR2(100) NOT NULL,
+date_of_transaction DATE NOT NULL,
+beneficiary_account_number NUMBER NOT NULL,
+CONSTRAINT r_fk FOREIGN KEY(rid) REFERENCES remitter(rid),
+CONSTRAINT b_acc_fk FOREIGN KEY(beneficiary_account_number) REFERENCES beneficiary(account_number)
+);

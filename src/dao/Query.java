@@ -39,11 +39,11 @@ public class Query {
 	/*
 	 * Beneficiary Queries
 	 */
-	public static String addBeneficiary = "insert into beneficiary values(?,?,?,?,?,?,?,?)";
+	public static String addBeneficiary = "insert into beneficiary values(?,?,?,?,?,?,?,?,?)";
 
 	public static String deleteBeneficiary = "delete from beneficiary where account_number=?";
 
-	public static String viewAllBeneficiaries = "select * from beneficiary where rid=?";
+	public static String viewAllBeneficiaries = "select * from beneficiary where rid=? order by account_number";
 
 	public static String updateBeneficiaryName = "update beneficiary set name=? where rid=? AND account_number=?";
 

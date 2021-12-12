@@ -3,7 +3,6 @@ package view;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -114,32 +113,26 @@ public class Main {
 						scan.nextLine();
 
 						switch (option) {
-						/*
-						 * Adding the account number
-						 */
+
+						// Add new account number
 						case 1:
 
-							try {
+							System.out.println("\nEnter account number: (5-digits long xxxxx)");
+							Long accountNumber = scan.nextLong();
+							scan.nextLine();
 
-								System.out.println("\nEnter account number: ");
-								Long accountNumber = scan.nextLong();
-								scan.nextLine();
+							// Checks whether account number is valid or not
+							isValid = validationController.validateAccountNumber(accountNumber);
 
-								isValid = validationController.validateAccountNumber(accountNumber);
-
-								if (isValid) {
-									result = adminController.addAccountNumber(accountNumber);
-									if (result > 0) {
-										System.out.println("Account number added successfully");
-									} else {
-										System.out.println("Failed to add account number");
-									}
+							if (isValid) {
+								result = adminController.addAccountNumber(accountNumber);
+								if (result > 0) {
+									System.out.println("Account number added successfully");
 								} else {
-									System.out.println("Invalid account number. Account number should be of 5 digits");
+									System.out.println("Failed to add account number");
 								}
-							} catch (InputMismatchException e) {
-								System.err.println(
-										"InputMismatchException: Account number can only contain digits and should be of length 5");
+							} else {
+								System.out.println("Invalid account number. Account number should be of 5 digits");
 							}
 
 							break;
@@ -149,11 +142,11 @@ public class Main {
 							if (viewAllAccounts.size() > 0) {
 								System.out.println();
 								System.out.format("%s\n", "Account Numbers");
-								for (AccountDetails accountNumber : viewAllAccounts) {
-									System.out.println(accountNumber);
+								for (AccountDetails accountNumber1 : viewAllAccounts) {
+									System.out.println(accountNumber1);
 								}
 							} else {
-								System.out.println("\nNo records found\n");
+								System.out.println("\nNo records found");
 							}
 							break;
 
@@ -170,7 +163,7 @@ public class Main {
 									System.out.println(remitter);
 								}
 							} else {
-								System.out.println("\nNo records found\n");
+								System.out.println("\nNo records found");
 							}
 							break;
 
@@ -178,21 +171,28 @@ public class Main {
 						 * Searching remitter by account number
 						 */
 						case 4:
-							System.out.println("\nEnter account number: ");
+							System.out.println("\nEnter account number: (5-digits long xxxxx)");
 							Long accountNo = scan.nextLong();
 							scan.nextLine();
 
-							List<Remitter> searchList = adminController.searchRemitter(accountNo);
-							if (searchList.size() > 0) {
-								System.out.println();
-								System.out.format("%-10s%-20s%-20s%-20s%-20s%s\n", "ID", "Name", "Password",
-										"Account Number", "Account Balance", "Account Type");
-								for (Remitter remitter : searchList) {
-									System.out.println(remitter);
+							isValid = validationController.validateAccountNumber(accountNo);
+
+							if (isValid) {
+								List<Remitter> searchList = adminController.searchRemitter(accountNo);
+								if (searchList.size() > 0) {
+									System.out.println();
+									System.out.format("%-10s%-20s%-20s%-20s%-20s%s\n", "ID", "Name", "Password",
+											"Account Number", "Account Balance", "Account Type");
+									for (Remitter remitter : searchList) {
+										System.out.println(remitter);
+									}
+								} else {
+									System.out.println("\nNo records found");
 								}
 							} else {
-								System.out.println("\nNo records found\n");
+								System.out.println("\nInvalid account number. Account number should be of 5 digits");
 							}
+
 							break;
 
 						/*
@@ -223,12 +223,17 @@ public class Main {
 				System.out.println("|***** REMITTER LOGIN *****|");
 				System.out.println("----------------------------");
 
-				System.out.println("Enter Id: ");
+				System.out.println("Enter Id: (3-digits long xxxxx)");
 				Long remitterLoginId = scan.nextLong();
 				scan.nextLine();
 
 				System.out.println("Enter password: ");
 				String remitterLoginPassword = scan.nextLine();
+
+				isValid = validationController.validateRemitterId(remitterLoginId);
+				if (!isValid) {
+					System.out.println("Invalid login id");
+				}
 
 				result = remitterController.verifyRemitter(remitterLoginId, remitterLoginPassword);
 
@@ -281,7 +286,7 @@ public class Main {
 
 							isValid = false;
 							while (isValid == false) {
-								System.out.println("Enter account number: ");
+								System.out.println("Enter account number: (5-digits long xxxxx)");
 								beneficiaryAccountNumber = scan.nextLong();
 								scan.nextLine();
 
@@ -329,7 +334,7 @@ public class Main {
 
 							isValid = false;
 							while (isValid == false) {
-								System.out.println("Enter ifsc code: ");
+								System.out.println("Enter ifsc code: (11-characters long xxxxxxxxxxx)");
 								ifscCode = scan.nextLine();
 
 								isValid = validationController.validateIfscCode(ifscCode);
@@ -359,7 +364,7 @@ public class Main {
 
 							isValid = false;
 							while (isValid == false) {
-								System.out.println("Enter max limit: ");
+								System.out.println("Enter maximum amount transfer limit: (not more than Rs 200000)");
 								transferLimit = scan.nextLong();
 								scan.nextLine();
 
@@ -378,9 +383,9 @@ public class Main {
 									transferLimit, remitterLoginId, 0L);
 
 							if (result > 0) {
-								System.out.println("\nBeneficiary Successfully added");
+								System.out.println("Beneficiary Successfully added");
 							} else {
-								System.out.println("\nFailed to add beneficiary");
+								System.out.println("Failed to add beneficiary");
 							}
 							break;
 
@@ -395,25 +400,38 @@ public class Main {
 									.viewAllBeneficiaries(remitterLoginId);
 							if (beneficiaries.size() > 0) {
 								System.out.println();
-								System.out.format("%-8s%-20s%-15s%-17s%-15s%-30s%-20s%s\n", "Acc No", "Name",
+								System.out.format("%-8s%-20s%-15s%-17s%-15s%-30s%-20s%-15s%s\n", "Acc No", "Name",
 										"Account Type", "Account Status", "IFSC Code", "Email", "Max Transfer Limit",
-										"Remitter ID");
+										"Remitter ID", "Account Balance");
 								for (Beneficiary beneficiary : beneficiaries) {
 									System.out.println(beneficiary);
 								}
 							} else {
-								System.out.println("\nNo records found\n");
+								System.out.println("\nNo beneficiaries found");
+								break;
 							}
 
-							System.out.println("\nEnter beneficiary's account number: ");
-							beneficiaryAccountNumber = scan.nextLong();
-							scan.nextLine();
+							isValid = false;
+							while (isValid == false) {
+								System.out.println("\nEnter beneficiary's account number: (5-digits long xxxxx)");
+								beneficiaryAccountNumber = scan.nextLong();
+								scan.nextLine();
 
-							System.out.println("Enter amount: ");
+								isValid = validationController.validateAccountNumber(beneficiaryAccountNumber);
+
+								if (isValid) {
+									System.out.println("Valid account number.");
+									break;
+								} else {
+									System.out.println("Invalid account number.");
+								}
+							}
+
+							System.out.println("\nEnter amount: ");
 							Long amount = scan.nextLong();
 							scan.nextLine();
 
-							System.out.println("Enter narration: ");
+							System.out.println("\nEnter narration: ");
 							String narration = scan.nextLine();
 
 							transactionController.fundTransfer(remitterLoginId, beneficiaryAccountNumber, amount,
@@ -459,6 +477,10 @@ public class Main {
 
 						// View all beneficiaries
 						case 4:
+							System.out.println();
+							System.out.println("------------------------------");
+							System.out.println("|***** MY BENEFICIARIES *****|");
+							System.out.println("------------------------------");
 							List<Beneficiary> beneficiariesList = beneficiaryController
 									.viewAllBeneficiaries(remitterLoginId);
 							if (beneficiariesList.size() > 0) {
@@ -470,7 +492,7 @@ public class Main {
 									System.out.println(beneficiary);
 								}
 							} else {
-								System.out.println("\nNo records found\n");
+								System.out.println("\nNo records found");
 							}
 							break;
 
@@ -498,7 +520,7 @@ public class Main {
 
 							isValid = false;
 							while (isValid == false) {
-								System.out.println("Enter mobile: ");
+								System.out.println("Enter mobile: (should be 10 digits long xxxxxxxxxx");
 								remitterMobile = scan.nextLong();
 								scan.nextLine();
 
@@ -807,8 +829,11 @@ public class Main {
 
 				isValid = false;
 				while (isValid == false) {
-					System.out.println(
-							"Password must contains atleast one lowercase, one alphabet, one digit[0-9] and one special character[@!#$%^&*]");
+					System.out.println("Password must consists of atleast one lowercase alphabet [a-z]");
+					System.out.println("Password must consists of atleast one uppercase alphabet [A-Z]");
+					System.out.println("Password must consists of atleast one numeric [0-9]");
+					System.out.println("Password must consists of atleast one special character [@!#$%^&*]");
+					System.out.println("Password should be minimum of 8 characters and maximum 16 characters long\n");
 					System.out.println("Create password: ");
 					remitterPassword = scan.nextLine();
 
@@ -823,7 +848,7 @@ public class Main {
 
 				isValid = false;
 				while (isValid == false) {
-					System.out.println("Enter account number: ");
+					System.out.println("Enter account number: (5-digits long xxxxx)");
 					remitterAccountNumber = scan.nextLong();
 					scan.nextLine();
 

@@ -126,7 +126,7 @@ public class ValidatorDAOImpl implements IValidatorDAO {
 	public boolean validateEmail(String email) {
 		isValidated = false;
 
-		if (email.matches("[a-zA-Z.]{8,30}[@]{1}[a-zA-Z]{4,10}[.]{1}[a-zA-Z]{2,3}")) {
+		if (email.matches("[a-zA-Z._0-9]{5,30}[@]{1}[a-zA-Z]{4,10}[.]{1}[a-zA-Z]{2,3}")) {
 			isValidated = true;
 		} else {
 			isValidated = false;

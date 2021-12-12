@@ -59,14 +59,14 @@ public class TransactionController {
 					intitiateTransaction(fundTransfer);
 
 				} else {
-					System.out.println("Insufficiant funds");
+					System.out.println("\nInsufficiant funds");
 					return 1;
 				}
 			} else if (fundTransfer.get("R_ACCOUNT_TYPE").equals("savings")) {
 				if (balance - amount > 1000) {
 					intitiateTransaction(fundTransfer);
 				} else {
-					System.out.println("Insufficiant funds");
+					System.out.println("\nInsufficiant funds");
 					return 1;
 				}
 
@@ -74,13 +74,13 @@ public class TransactionController {
 				if (balance - amount > 3000) {
 					intitiateTransaction(fundTransfer);
 				} else {
-					System.out.println("Insufficiant funds");
+					System.out.println("\nInsufficiant funds");
 					return 1;
 				}
 			}
 
 		} else {
-			System.out.println("Beneficiary account is inactive");
+			System.out.println("\nBeneficiary account is inactive");
 			return 1;
 		}
 

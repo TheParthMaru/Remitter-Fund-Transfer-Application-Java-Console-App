@@ -36,7 +36,7 @@
 
    - The entered account number is first validated before inserting into the **account_details** table.
 
-   - The account number must be of **5 digits only** i.e., from **10001 to 99999**.
+   - The account number must be of **5 digits only** i.e., from **10000 to 99999**.
 
    - If the account number is invalid a message is displayed as ***"Invalid account number. Account number should be of 5 digits."*** 
 
@@ -157,4 +157,84 @@
 
   - If all of the above fields are successfully validated, new remitter is successfully registered and his login id is also displayed for login process.
   - If account number is valid but it does not exists in account_details table or is already in use by another remitter then ***"Account number does not exists or already in use"*** message is displayed.
+  
+  
+
+<h1>General Validations</h1>
+
+- All the validations are implemented in **ValidatorDAOImpl.java** file.
+
+<h2> Name Validaiton</h2>
+
+- Cannot be empty
+- Can contain a-z lowercase characters
+- Can contain A-Z uppercase characters
+- Whitespace allowed between first name and last name
+- Minimum characters should be 3 and maximum should be 20
+
+<h2>Password Validation</h2>
+
+- Password must consists of at least one lowercase alphabet [a-z]
+- Password must consists of at least one uppercase alphabet [A-Z]
+- Password must consists of at least one numeric [0-9]
+- Password must consists of at least one special character [@!#$%^&*]
+- Password should be minimum of 8 characters and maximum 16 characters long
+- Regex Pattern -> **((?=.*[a-z])(?=.*[A-Z])(?=.*[@!#$%^&*]).{8,16})**
+
+<h2>Account Number Validation</h2>
+
+- Cannot be null
+- Should be of 5 digits only
+- Should be between 10000 to 99999
+
+<h2>Account Type Validation</h2>
+
+- Cannot be empty
+- Should be either salary or savings or current
+- Also added the functionality to ignore the case but make sure to enter in lower case for general type.
+
+<h2>Account Balance Validation</h2>
+
+- If account type is salary then account balance needs to be greater than or equal to 0.
+- If account type is savings then account balance needs to be greater than or equal to 1000.
+- If account type is current then account balance needs to be greater than or equal to 3000. 
+
+<h2>Beneficiary Account Status Validation</h2>
+
+- Should be either active or inactive.
+- Cannot be empty.
+
+<h2>IFSC Code Validation</h2>
+
+- Should be 11 characters long.
+- First 4 characters can be uppercase or lowercase
+- Next 7 characters can be uppercase or lowercase and can also contain digits
+- Regex Pattern -> **^[A-Za-z]{4}[a-zA-Z0-9]{7}$**
+
+<h2>Email Validation</h2>
+
+- First 5 to 30 characters can be lowercase, uppercase, digits, underscore and **"."**
+- Next character needs to be **@**
+- Next 4 to 10 characters can be uppercase or lowercase
+- Next character needs to be **"."**
+- Next 2 to 3 characters can be uppercase or lowercase.
+- Regex Pattern -> **[a-zA-Z._0-9]{5,30}[@]{1}[a-zA-Z]{4,10}[.]{1}[a-zA-Z]{2,3}**
+
+<h2>Maximum Transfer Limit Validation</h2>
+
+- Max Transfer Limit cannot exceed Rs 2,00,000.
+
+<h2>Remitter Id Validation</h2>
+
+- Needs to be 3 digit long between 101 to 999 both inclusive.
+
+<h2>Mobile Number Validation</h2>
+
+- Cannot be empty.
+- Needs to be 10 digits long.
+
+<h2>Address Validation</h2>
+
+- Needs to be minimum of 3 to maximum of 30 characters long.
+- Can include , and space
 
